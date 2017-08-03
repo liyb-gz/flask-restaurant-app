@@ -1,0 +1,13 @@
+.panel-info .panel-heading a {
+	color: white;
+}
+
+.panel-info .panel-heading input {
+    background-color: #3498db;
+    border: none;
+    border-bottom: 1px solid white;
+}
+
+.panel-info .panel-heading input::placeholder {
+	color: #bbb;
+}
