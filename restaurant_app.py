@@ -9,15 +9,15 @@ def list_restaurants():
 
 @app.route("/restaurants/add")
 def add_restaurant():
-	return "add_restaurant"
+	return render_template('restaurants_add.html')
 
 @app.route("/restaurants/<int:restaurant_id>/edit")
-def edit_restaurant():
-	return "edit_restaurant"
+def edit_restaurant(restaurant_id):
+	return render_template('restaurants_edit.html', restaurant = test_res)
 
 @app.route("/restaurants/<int:restaurant_id>/delete")
-def delete_restaurant():
-	return "delete_restaurant"
+def delete_restaurant(restaurant_id):
+	return render_template('restaurants_delete.html', restaurant = test_res)
 
 @app.route("/restaurants/<int:restaurant_id>/")
 @app.route("/restaurants/<int:restaurant_id>/menu/")
