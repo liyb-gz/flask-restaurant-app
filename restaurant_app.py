@@ -20,7 +20,7 @@ def delete_restaurant():
 
 @app.route("/restaurants/<int:restaurants_id>/")
 @app.route("/restaurants/<int:restaurants_id>/menu/")
-def list_restaurant_menu(restaurants_id):
+def list_menu_item(restaurants_id):
 	return "list_restaurant_menu"
 
 @app.route("/restaurants/<int:restaurants_id>/menu/add")
