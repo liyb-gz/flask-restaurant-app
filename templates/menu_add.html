@@ -16,6 +16,13 @@
 					Add a new menu item for the restaurant "{{restaurant.name}}"
 				</h1>
 			</div>
+			<div class="col-xs-12">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{{url_for('list_restaurants')}}">Restaurants</a></li>
+					<li class="breadcrumb-item"><a href="{{url_for('list_menu_item', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></li>
+					<li class="breadcrumb-item">Add Menu Item</li>
+				</ol>
+			</div>
 			<div class="col-sm-12">
 				<form action="{{url_for('add_menu_item', restaurant_id=restaurant.id)}}" method="post">
 					<div class="panel panel-primary">

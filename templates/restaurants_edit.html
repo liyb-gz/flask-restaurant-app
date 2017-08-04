@@ -16,6 +16,12 @@
 					Edit Restaurant "{{restaurant.name}}"
 				</h1>
 			</div>
+			<div class="col-xs-12">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{{url_for('list_restaurants')}}">Restaurants</a></li>
+					<li class="breadcrumb-item">Edit</li>
+				</ol>
+			</div>
 			<div class="col-sm-12">
 				<form action="{{url_for('edit_restaurant', restaurant_id = restaurant.id)}}" method="post">
 					<div class="panel panel-info">

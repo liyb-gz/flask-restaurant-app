@@ -14,10 +14,15 @@
 			<div class="col-xs-12 page-header">
 				<h1>
 					Restaurants
-					<a href="{{url_for('add_restaurant')}}" class="btn btn-primary btn-sm pull-right">
+					<a href="{{url_for('add_restaurant')}}" class="btn btn-info btn-sm pull-right">
 						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 					</a>
 				</h1>
+			</div>
+			<div class="col-xs-12">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item">Restaurants</li>
+				</ol>
 			</div>
 			{% for restaurant in restaurants %}
 			<div class="col-sm-6 col-md-4">

@@ -19,6 +19,12 @@
 					</a>
 				</h1>
 			</div>
+			<div class="col-xs-12">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{{url_for('list_restaurants')}}">Restaurants</a></li>
+					<li class="breadcrumb-item">{{restaurant.name}}</li>
+				</ol>
+			</div>
 			{% for item in items %}
 			<div class="col-sm-6 col-md-4">
 				<div class="panel panel-primary">
