@@ -26,16 +26,16 @@ def list_menu_item(restaurant_id):
 
 @app.route("/restaurants/<int:restaurant_id>/menu/add")
 def add_menu_item(restaurant_id):
-	return "add_menu_item"
+	return render_template('menu_add.html', restaurant = test_res)
 
 @app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/")
 @app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit")
 def edit_menu_item(restaurant_id, menu_item_id):
-	return "edit_menu_item"
+	return render_template('menu_edit.html', restaurant = test_res, item = test_item_1)
 
 @app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/delete")
 def delete_menu_item(restaurant_id, menu_item_id):
-	return "delete_menu_item"
+	return render_template('menu_delete.html', restaurant = test_res, item = test_item_1)
 
 
 if __name__ == "__main__":
