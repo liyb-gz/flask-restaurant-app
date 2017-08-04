@@ -22,7 +22,7 @@ def delete_restaurant(restaurant_id):
 @app.route("/restaurants/<int:restaurant_id>/")
 @app.route("/restaurants/<int:restaurant_id>/menu/")
 def list_menu_item(restaurant_id):
-	return "list_restaurant_menu"
+	return render_template('menu.html', restaurant = test_res, items = [test_item_1])
 
 @app.route("/restaurants/<int:restaurant_id>/menu/add")
 def add_menu_item(restaurant_id):
