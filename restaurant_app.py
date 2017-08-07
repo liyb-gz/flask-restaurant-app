@@ -97,7 +97,6 @@ def add_menu_item(restaurant_id):
 def edit_menu_item(restaurant_id, menu_item_id):
 	if request.method == 'POST':
 		session = DBSession()
-		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
 		item = session.query(MenuItem).filter_by(id = menu_item_id).one()
 		item.name = request.form['name']
 		item.description = request.form['description']
@@ -110,11 +109,24 @@ def edit_menu_item(restaurant_id, menu_item_id):
 		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
 		item = session.query(MenuItem).filter_by(id = menu_item_id).one()
 		session.close()
-	return render_template('menu_edit.html', restaurant = restaurant, item = item)
+		return render_template('menu_edit.html', restaurant = restaurant, item = item)
 
-@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/delete")
+@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/delete", methods = ['GET', 'POST'])
 def delete_menu_item(restaurant_id, menu_item_id):
-	return render_template('menu_delete.html', restaurant = test_res, item = test_item_1)
+	if request.method == 'POST':
+		if request.form['submit'] == 'delete':
+			session = DBSession()
+			item = session.query(MenuItem).filter_by(id = menu_item_id).one()
+			session.delete(item)
+			session.commit()
+			session.close()
+		return redirect(url_for("list_menu_item", restaurant_id = restaurant_id), code = 302)
+	else:
+		session = DBSession()
+		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+		item = session.query(MenuItem).filter_by(id = menu_item_id).one()
+		session.close()
+		return render_template('menu_delete.html', restaurant = restaurant, item = item)
 
 
 if __name__ == "__main__":
