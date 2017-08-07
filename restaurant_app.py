@@ -1,6 +1,5 @@
 from flask import Flask, render_template, redirect, request, url_for
 from database import *
-from restaurant_fake_data import *
 app = Flask(__name__)
 
 DBSession = sessionmaker(bind=engine)
