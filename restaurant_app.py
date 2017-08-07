@@ -51,7 +51,14 @@ def delete_restaurant(restaurant_id):
 		if request.form['submit'] == 'delete':
 			session = DBSession()
 			restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+			items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).all()
+
+			# Not only should we delete the restaurant itself,
+			# but also the menu items that belongs to the restaurant.
 			session.delete(restaurant)
+			for item in items:
+				session.delete(item)
+
 			session.commit()
 			session.close()
 		return redirect(url_for("list_restaurants"), code = 302)
