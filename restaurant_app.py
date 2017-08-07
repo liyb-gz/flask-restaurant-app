@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, request
 from database import *
 from restaurant_fake_data import *
 app = Flask(__name__)
@@ -14,9 +14,19 @@ def list_restaurants():
 	session.close()
 	return render_template('restaurants.html', restaurants = restaurants, items = items)
 
-@app.route("/restaurants/add")
+@app.route("/restaurants/add", methods = ['GET', 'POST'])
 def add_restaurant():
-	return render_template('restaurants_add.html')
+	if request.method == 'POST':
+		restaurant = Restaurant()
+		restaurant.name = request.form['name']
+		restaurant.description = request.form['description']
+		session = DBSession()
+		session.add(restaurant)
+		session.commit()
+		session.close()
+		return redirect("/", code = 302)
+	else:
+		return render_template('restaurants_add.html')
 
 @app.route("/restaurants/<int:restaurant_id>/edit")
 def edit_restaurant(restaurant_id):
