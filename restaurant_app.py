@@ -91,10 +91,26 @@ def add_menu_item(restaurant_id):
 		session.close()
 		return render_template('menu_add.html', restaurant = restaurant)
 
-@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/")
-@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit")
+# TODO: Add price and course editing
+@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/", methods = ['GET', 'POST'])
+@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit", methods = ['GET', 'POST'])
 def edit_menu_item(restaurant_id, menu_item_id):
-	return render_template('menu_edit.html', restaurant = test_res, item = test_item_1)
+	if request.method == 'POST':
+		session = DBSession()
+		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+		item = session.query(MenuItem).filter_by(id = menu_item_id).one()
+		item.name = request.form['name']
+		item.description = request.form['description']
+		session.add(item)
+		session.commit()
+		session.close()
+		return redirect(url_for("list_menu_item", restaurant_id = restaurant_id), code = 302)
+	else:
+		session = DBSession()
+		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+		item = session.query(MenuItem).filter_by(id = menu_item_id).one()
+		session.close()
+	return render_template('menu_edit.html', restaurant = restaurant, item = item)
 
 @app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/delete")
 def delete_menu_item(restaurant_id, menu_item_id):
