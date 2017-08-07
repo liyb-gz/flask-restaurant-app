@@ -14,6 +14,7 @@ def list_restaurants():
 	session.close()
 	return render_template('restaurants.html', restaurants = restaurants, items = items)
 
+# TODO: add try-except structure for malformed form, null fields, and overlong strings
 @app.route("/restaurants/add", methods = ['GET', 'POST'])
 def add_restaurant():
 	if request.method == 'POST':
@@ -28,9 +29,21 @@ def add_restaurant():
 	else:
 		return render_template('restaurants_add.html')
 
-@app.route("/restaurants/<int:restaurant_id>/edit")
+@app.route("/restaurants/<int:restaurant_id>/edit", methods = ['GET', 'POST'])
 def edit_restaurant(restaurant_id):
-	return render_template('restaurants_edit.html', restaurant = test_res)
+	if request.method == 'POST':
+		session = DBSession()
+		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+		restaurant.name = request.form['name']
+		restaurant.description = request.form['description']
+		session.commit()
+		session.close()
+		return redirect("/", code = 302)
+	else:
+		session = DBSession()
+		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+		session.close()
+		return render_template('restaurants_edit.html', restaurant = restaurant)
 
 @app.route("/restaurants/<int:restaurant_id>/delete", methods = ['GET', 'POST'])
 def delete_restaurant(restaurant_id):
