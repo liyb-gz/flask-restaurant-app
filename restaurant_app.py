@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, url_for
 from database import *
 from restaurant_fake_data import *
 app = Flask(__name__)
@@ -25,7 +25,7 @@ def add_restaurant():
 		session.add(restaurant)
 		session.commit()
 		session.close()
-		return redirect("/", code = 302)
+		return redirect(url_for("list_restaurants"), code = 302)
 	else:
 		return render_template('restaurants_add.html')
 
@@ -38,7 +38,7 @@ def edit_restaurant(restaurant_id):
 		restaurant.description = request.form['description']
 		session.commit()
 		session.close()
-		return redirect("/", code = 302)
+		return redirect(url_for("list_restaurants"), code = 302)
 	else:
 		session = DBSession()
 		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
@@ -54,7 +54,7 @@ def delete_restaurant(restaurant_id):
 			session.delete(restaurant)
 			session.commit()
 			session.close()
-		return redirect("/", code = 302)
+		return redirect(url_for("list_restaurants"), code = 302)
 	else:
 		session = DBSession()
 		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
@@ -70,9 +70,26 @@ def list_menu_item(restaurant_id):
 	session.close()
 	return render_template('menu.html', restaurant = restaurant, items = items)
 
-@app.route("/restaurants/<int:restaurant_id>/menu/add")
+@app.route("/restaurants/<int:restaurant_id>/menu/add", methods = ['GET', 'POST'])
 def add_menu_item(restaurant_id):
-	return render_template('menu_add.html', restaurant = test_res)
+	if request.method == 'POST':
+		item = MenuItem()
+		item.name = request.form['name']
+		item.description = request.form['description']
+		item.restaurant_id = restaurant_id
+
+		session = DBSession()
+		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+		item.restaurant = restaurant
+		session.add(item)
+		session.commit()
+		session.close()
+		return redirect(url_for("list_menu_item", restaurant_id = restaurant_id), code = 302)
+	else:
+		session = DBSession()
+		restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+		session.close()
+		return render_template('menu_add.html', restaurant = restaurant)
 
 @app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/")
 @app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit")
