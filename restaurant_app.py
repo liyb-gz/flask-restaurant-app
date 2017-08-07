@@ -1,11 +1,18 @@
 from flask import Flask, render_template
+from database import *
 from restaurant_fake_data import *
 app = Flask(__name__)
+
+DBSession = sessionmaker(bind=engine)
 
 @app.route("/")
 @app.route("/restaurants/")
 def list_restaurants():
-    return render_template('restaurants.html', restaurants = test_reses, items = test_items)
+	session = DBSession()
+	restaurants = session.query(Restaurant).all()
+	items = session.query(MenuItem).all()
+	session.close()
+	return render_template('restaurants.html', restaurants = restaurants, items = items)
 
 @app.route("/restaurants/add")
 def add_restaurant():
