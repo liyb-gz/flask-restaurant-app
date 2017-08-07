@@ -64,7 +64,11 @@ def delete_restaurant(restaurant_id):
 @app.route("/restaurants/<int:restaurant_id>/")
 @app.route("/restaurants/<int:restaurant_id>/menu/")
 def list_menu_item(restaurant_id):
-	return render_template('menu.html', restaurant = test_res, items = [test_item_1])
+	session = DBSession()
+	restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+	items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).all()
+	session.close()
+	return render_template('menu.html', restaurant = restaurant, items = items)
 
 @app.route("/restaurants/<int:restaurant_id>/menu/add")
 def add_menu_item(restaurant_id):
