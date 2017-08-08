@@ -140,8 +140,9 @@ def restaurants_JSON():
 	session = DBSession()
 	restaurants = session.query(Restaurant).all()
 	items = session.query(MenuItem).all()
+	json_content = jsonify(restaurants = [restaurant.serialize for restaurant in restaurants])
 	session.close()
-	return jsonify(restaurants = [restaurant.serialize for restaurant in restaurants])
+	return json_content
 
 @app.route("/restaurants/<int:restaurant_id>/JSON/")
 @app.route("/restaurants/<int:restaurant_id>/menu/JSON/")
