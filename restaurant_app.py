@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, jsonify
 from database import *
 app = Flask(__name__)
 
@@ -14,7 +14,7 @@ def list_restaurants():
 	return render_template('restaurants.html', restaurants = restaurants, items = items)
 
 # TODO: add try-except structure for malformed form, null fields, and overlong strings
-@app.route("/restaurants/add", methods = ['GET', 'POST'])
+@app.route("/restaurants/add/", methods = ['GET', 'POST'])
 def add_restaurant():
 	if request.method == 'POST':
 		restaurant = Restaurant()
@@ -28,7 +28,7 @@ def add_restaurant():
 	else:
 		return render_template('restaurants_add.html')
 
-@app.route("/restaurants/<int:restaurant_id>/edit", methods = ['GET', 'POST'])
+@app.route("/restaurants/<int:restaurant_id>/edit/", methods = ['GET', 'POST'])
 def edit_restaurant(restaurant_id):
 	if request.method == 'POST':
 		session = DBSession()
@@ -44,7 +44,7 @@ def edit_restaurant(restaurant_id):
 		session.close()
 		return render_template('restaurants_edit.html', restaurant = restaurant)
 
-@app.route("/restaurants/<int:restaurant_id>/delete", methods = ['GET', 'POST'])
+@app.route("/restaurants/<int:restaurant_id>/delete/", methods = ['GET', 'POST'])
 def delete_restaurant(restaurant_id):
 	if request.method == 'POST':
 		if request.form['submit'] == 'delete':
@@ -76,7 +76,7 @@ def list_menu_item(restaurant_id):
 	session.close()
 	return render_template('menu.html', restaurant = restaurant, items = items)
 
-@app.route("/restaurants/<int:restaurant_id>/menu/add", methods = ['GET', 'POST'])
+@app.route("/restaurants/<int:restaurant_id>/menu/add/", methods = ['GET', 'POST'])
 def add_menu_item(restaurant_id):
 	if request.method == 'POST':
 		item = MenuItem()
@@ -99,7 +99,7 @@ def add_menu_item(restaurant_id):
 
 # TODO: Add price and course editing
 @app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/", methods = ['GET', 'POST'])
-@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit", methods = ['GET', 'POST'])
+@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit/", methods = ['GET', 'POST'])
 def edit_menu_item(restaurant_id, menu_item_id):
 	if request.method == 'POST':
 		session = DBSession()
@@ -117,7 +117,7 @@ def edit_menu_item(restaurant_id, menu_item_id):
 		session.close()
 		return render_template('menu_edit.html', restaurant = restaurant, item = item)
 
-@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/delete", methods = ['GET', 'POST'])
+@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/delete/", methods = ['GET', 'POST'])
 def delete_menu_item(restaurant_id, menu_item_id):
 	if request.method == 'POST':
 		if request.form['submit'] == 'delete':
@@ -134,6 +134,23 @@ def delete_menu_item(restaurant_id, menu_item_id):
 		session.close()
 		return render_template('menu_delete.html', restaurant = restaurant, item = item)
 
+@app.route("/restaurants/JSON/")
+@app.route("/JSON/")
+def restaurants_JSON():
+	session = DBSession()
+	restaurants = session.query(Restaurant).all()
+	items = session.query(MenuItem).all()
+	session.close()
+	return jsonify(restaurants = [restaurant.serialize for restaurant in restaurants])
+
+@app.route("/restaurants/<int:restaurant_id>/JSON/")
+@app.route("/restaurants/<int:restaurant_id>/menu/JSON/")
+def restaurant_menu_JSON(restaurant_id):
+	return("restaurant_menu_JSON")
+
+@app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/JSON/")
+def menu_item_JSON(restaurant_id, menu_item_id):
+	return("menu_item_JSON")
 
 if __name__ == "__main__":
 	app.debug = True
