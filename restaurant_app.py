@@ -1,6 +1,8 @@
-from flask import Flask, render_template, redirect, request, url_for, jsonify
+from flask import Flask, render_template, \
+	redirect, request, url_for, jsonify, flash
 from database import *
 app = Flask(__name__)
+app.secret_key = 'dev'
 
 DBSession = sessionmaker(bind=engine)
 
@@ -24,6 +26,7 @@ def add_restaurant():
 		session.add(restaurant)
 		session.commit()
 		session.close()
+		flash('New Restaurant Created.')
 		return redirect(url_for("list_restaurants"), code = 302)
 	else:
 		return render_template('restaurants_add.html')
@@ -37,6 +40,7 @@ def edit_restaurant(restaurant_id):
 		restaurant.description = request.form['description']
 		session.commit()
 		session.close()
+		flash('Restaurant Successfully Edited.')
 		return redirect(url_for("list_restaurants"), code = 302)
 	else:
 		session = DBSession()
@@ -60,6 +64,7 @@ def delete_restaurant(restaurant_id):
 
 			session.commit()
 			session.close()
+			flash('Restaurant Successfully Deleted.')
 		return redirect(url_for("list_restaurants"), code = 302)
 	else:
 		session = DBSession()
@@ -90,6 +95,7 @@ def add_menu_item(restaurant_id):
 		session.add(item)
 		session.commit()
 		session.close()
+		flash('Menu Item Successfully Added.')
 		return redirect(url_for("list_menu_item", restaurant_id = restaurant_id), code = 302)
 	else:
 		session = DBSession()
@@ -109,6 +115,7 @@ def edit_menu_item(restaurant_id, menu_item_id):
 		session.add(item)
 		session.commit()
 		session.close()
+		flash('Menu Item Successfully Edited.')
 		return redirect(url_for("list_menu_item", restaurant_id = restaurant_id), code = 302)
 	else:
 		session = DBSession()
@@ -126,6 +133,7 @@ def delete_menu_item(restaurant_id, menu_item_id):
 			session.delete(item)
 			session.commit()
 			session.close()
+			flash('Menu Item Successfully Deleted.')
 		return redirect(url_for("list_menu_item", restaurant_id = restaurant_id), code = 302)
 	else:
 		session = DBSession()
