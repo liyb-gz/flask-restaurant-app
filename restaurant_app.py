@@ -139,7 +139,6 @@ def delete_menu_item(restaurant_id, menu_item_id):
 def restaurants_JSON():
 	session = DBSession()
 	restaurants = session.query(Restaurant).all()
-	items = session.query(MenuItem).all()
 	json_content = jsonify(restaurants = [restaurant.serialize for restaurant in restaurants])
 	session.close()
 	return json_content
@@ -147,11 +146,17 @@ def restaurants_JSON():
 @app.route("/restaurants/<int:restaurant_id>/JSON/")
 @app.route("/restaurants/<int:restaurant_id>/menu/JSON/")
 def restaurant_menu_JSON(restaurant_id):
-	return("restaurant_menu_JSON")
+	session = DBSession()
+	items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).all()
+	session.close()
+	return jsonify(menu_items = [item.serialize for item in items])
 
 @app.route("/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/JSON/")
 def menu_item_JSON(restaurant_id, menu_item_id):
-	return("menu_item_JSON")
+	session = DBSession()
+	item = session.query(MenuItem).filter_by(id = menu_item_id).one()
+	session.close()
+	return jsonify(menu_item = item.serialize)
 
 if __name__ == "__main__":
 	app.debug = True
