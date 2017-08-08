@@ -12,13 +12,15 @@ class Restaurant(Base):
 	id = Column(Integer, primary_key = True)
 	name = Column(String(80), nullable = False)
 	description = Column(String(250))
+	menu_items = relationship('MenuItem', backref = 'restaurant')
 
 	@property
 	def serialize(self):
 		return {
 			'id': self.id,
 			'name': self.name,
-			'description': self.description
+			'description': self.description,
+			'menu_items': [menu_item.serialize for menu_item in self.menu_items]
 		}
 
 class MenuItem(Base):
@@ -31,7 +33,7 @@ class MenuItem(Base):
 	price = Column(String(8))
 
 	restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
-	restaurant = relationship(Restaurant)
+	# restaurant = relationship(Restaurant)
 
 	@property
 	def serialize(self):
